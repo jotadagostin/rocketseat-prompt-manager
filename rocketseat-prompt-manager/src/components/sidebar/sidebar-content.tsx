@@ -60,6 +60,8 @@ export const SidebarContent = () => {
                 <Button
                   onClick={collapsedSidebar}
                   variant="icon"
+                  aria-label="Minimizar sidebar"
+                  title="Minimizar sidebar"
                   className="hidden md:inline-flex p-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-accent-500 rounded-lg transition-colors"
                 >
                   <ArrowLeftToLine className="w-5 h-5 text-gray-100" />
