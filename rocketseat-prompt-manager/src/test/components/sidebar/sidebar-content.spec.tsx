@@ -4,11 +4,14 @@ import {
 } from '@/components/sidebar/sidebar-content';
 import { render, screen } from '@/lib/test-utils';
 import userEvent from '@testing-library/user-event';
+import { useSearchParams } from 'next/navigation';
 
 const pushMock = jest.fn();
+let mockSearchParams = new URLSearchParams();
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: pushMock }),
+  useSearchParams: () => mockSearchParams,
 }));
 
 const initialPromps = [
@@ -117,5 +120,34 @@ describe('SidebarContent', () => {
 
     expect(screen.getByText(input[0].title)).toBeInTheDocument();
     expect(screen.getAllByRole('paragraph')).toHaveLength(input.length);
+  });
+
+  describe('Busca', () => {
+    it('Deveria navegar com a URL codificadaa ao digitar e limpar', async () => {
+      const text = 'A B';
+      makeSut();
+
+      const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+
+      await user.type(searchInput, text);
+
+      expect(pushMock).toHaveBeenCalled();
+      const lastCall = pushMock.mock.calls.at(-1);
+      expect(lastCall?.[0]).toBe('/?q=A%20B');
+
+      await user.clear(searchInput);
+      const lastClearCall = pushMock.mock.calls.at(-1);
+      expect(lastClearCall?.[0]).toBe('/');
+    });
+  });
+
+  it('Deveria iniciar o campo de busca com o search param', () => {
+    const text = 'text';
+    const searchParams = new URLSearchParams(`q=${text}`);
+    mockSearchParams = searchParams;
+    makeSut();
+
+    const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+    expect(searchInput).toHaveValue(text);
   });
 });
