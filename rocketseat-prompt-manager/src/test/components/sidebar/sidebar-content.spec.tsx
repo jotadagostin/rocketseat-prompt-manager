@@ -88,6 +88,16 @@ describe('SidebarContent', () => {
       expect(screen.getByRole('complementary')).toBeVisible();
       expect(screen.getByRole('button', { name: 'Novo prompt' })).toBeVisible();
     });
+
+    it('deveria atualizar o campo de busca ao digitar', async () => {
+      const text = 'AI';
+      makeSut();
+      const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+
+      await user.type(searchInput, text);
+
+      expect(searchInput).toHaveValue(text);
+    });
   });
 
   it('deveria renderizar a lista de prompts', () => {
