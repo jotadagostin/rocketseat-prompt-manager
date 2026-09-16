@@ -4,12 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
-import { Form, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import {
   CreatePromptDTO,
   createPromptSchema,
 } from '@/core/aplication/prompts/create-prompt.dto';
-import { FormControl, FormField, FormItem } from '../ui/form';
+import { Form, FormControl, FormField, FormItem } from '../ui/form';
 
 export const PromptForm = () => {
   const form = useForm<CreatePromptDTO>({
