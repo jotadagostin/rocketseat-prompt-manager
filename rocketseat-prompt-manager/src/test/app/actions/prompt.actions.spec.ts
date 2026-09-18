@@ -1,4 +1,7 @@
-import { searchPromptAction } from '@/app/actions/prompt.actions';
+import {
+  createPromptAction,
+  searchPromptAction,
+} from '@/app/actions/prompt.actions';
 
 jest.mock('@/lib/prisma', () => ({ prisma: {} }));
 const mockedSearchExecute = jest.fn();
@@ -13,6 +16,22 @@ describe('Server Actions: Prompts', () => {
   beforeEach(() => {
     mockedSearchExecute.mockReset();
   });
+
+  describe.only('createPromptAction', () => {
+    it('deve retornar erro de validação quando os campos forem vazios', async () => {
+      const data = {
+        title: '',
+        content: '',
+      };
+
+      const result = await createPromptAction(data);
+
+      expect(result?.success).toBe(false);
+      expect(result?.message).toBe('Falha ao criar prompt.');
+      expect(result?.errors).toBeDefined();
+    });
+  });
+
   describe('searchPromptAction', () => {
     it('deve retornar sucesso com o termo de busca nao vazio', async () => {
       const input = [{ id: '1', title: 'AI Title', content: 'Content 01' }];

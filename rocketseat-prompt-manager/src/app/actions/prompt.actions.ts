@@ -4,12 +4,31 @@ import { SearchPromptsUseCase } from '@/core/aplication/prompts/search-prompts.u
 import { PromptSummary } from '@/core/domain/prompts/prompt.entity';
 import { prisma } from '@/lib/prisma';
 import { PrismaPromptRepository } from '../infra/repository/prisma-prompt.repository';
+import {
+  CreatePromptDTO,
+  createPromptSchema,
+} from '@/core/aplication/prompts/create-prompt.dto';
+import z from 'zod';
 
 type SearchFormState = {
   success: boolean;
   prompts?: PromptSummary[];
   message?: string;
 };
+
+export async function createPromptAction(data: CreatePromptDTO) {
+  const validated = createPromptSchema.safeParse(data);
+
+  if (!validated.success) {
+    const { fieldErrors } = z.flattenError(validated.error);
+
+    return {
+      success: false,
+      message: 'Falha ao criar prompt.',
+      errors: fieldErrors,
+    };
+  }
+}
 
 export async function searchPromptAction(
   _prev: SearchFormState,
