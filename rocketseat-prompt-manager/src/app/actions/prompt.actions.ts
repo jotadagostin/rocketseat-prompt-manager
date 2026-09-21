@@ -8,7 +8,8 @@ import {
   CreatePromptDTO,
   createPromptSchema,
 } from '@/core/aplication/prompts/create-prompt.dto';
-import z from 'zod';
+import z, { success } from 'zod';
+import { CreatePromptUseCase } from '@/core/aplication/prompts/create-prompt.use-case';
 
 type SearchFormState = {
   success: boolean;
@@ -28,6 +29,30 @@ export async function createPromptAction(data: CreatePromptDTO) {
       errors: fieldErrors,
     };
   }
+
+  try {
+    const repository = new PrismaPromptRepository(prisma);
+    const useCase = new CreatePromptUseCase(repository);
+    await useCase.execute(validated.data);
+  } catch (error) {
+    const _error = error as Error;
+    if (_error.message === 'PROMPT_ALREADY_EXISTS') {
+      return {
+        success: false,
+        message: 'Prompt com esse título já existe.',
+      };
+    }
+
+    return {
+      success: false,
+      message: 'Falha ao criar prompt.',
+    };
+  }
+
+  return {
+    success: true,
+    message: 'Prompt criado com sucesso',
+  };
 }
 
 export async function searchPromptAction(
