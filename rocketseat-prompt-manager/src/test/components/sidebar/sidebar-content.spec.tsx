@@ -11,24 +11,21 @@ const setQueryMock = jest.fn();
 let mockSearchParams = new URLSearchParams();
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: pushMock }),
+  useSearchParams: () => new URLSearchParams(),
 }));
 
-jest.mock(
-  'nuqs',
-  () => ({
-    useQueryState: (key: string) => {
-      const [value, setValue] = useState(mockSearchParams.get(key) ?? '');
+jest.mock('nuqs', () => ({
+  useQueryState: (key: string) => {
+    const [value, setValue] = useState(mockSearchParams.get(key) ?? '');
 
-      const setQuery = (nextValue: string) => {
-        setQueryMock(nextValue);
-        setValue(nextValue);
-      };
+    const setQuery = (nextValue: string) => {
+      setQueryMock(nextValue);
+      setValue(nextValue);
+    };
 
-      return [value, setQuery] as const;
-    },
-  }),
-  { virtual: true }
-);
+    return [value, setQuery] as const;
+  },
+}));
 
 const initialPrompts = [
   {
