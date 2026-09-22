@@ -2,7 +2,6 @@ import {
   createPromptAction,
   searchPromptAction,
 } from '@/app/actions/prompt.actions';
-import { title } from 'process';
 
 jest.mock('@/lib/prisma', () => ({ prisma: {} }));
 
@@ -24,6 +23,7 @@ jest.mock('@/core/aplication/prompts/create-prompt.use-case', () => ({
 describe('Server Actions: Prompts', () => {
   beforeEach(() => {
     mockedSearchExecute.mockReset();
+    mockedCreateExecute.mockReset();
   });
 
   describe('createPromptAction', () => {
@@ -64,6 +64,19 @@ describe('Server Actions: Prompts', () => {
 
       expect(result?.success).toBe(false);
       expect(result?.message).toBe('Prompt com esse título já existe.');
+    });
+
+    it('Deve retornar error generico quando a criacao falhar', async () => {
+      mockedCreateExecute.mockRejectedValue(new Error('UNKNOWN'));
+      const data = {
+        title: 'Title',
+        content: 'Content',
+      };
+
+      const result = await createPromptAction(data);
+
+      expect(result.success).toBe(false);
+      expect(result.message).toBe('Falha ao criar prompt.');
     });
   });
 
