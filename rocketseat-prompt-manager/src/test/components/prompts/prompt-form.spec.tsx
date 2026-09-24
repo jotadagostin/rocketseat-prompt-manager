@@ -1,51 +1,81 @@
-import { render, screen, waitFor } from '@/lib/test-utils';
+import { PromptForm } from '@/components/prompts';
+import { render, screen } from '@/lib/test-utils';
 import userEvent from '@testing-library/user-event';
-import { PromptForm } from '@/components/prompts/prompt-form';
-import { createPromptAction } from '@/app/actions/prompt.actions';
 import { toast } from 'sonner';
 
+const refreshMock = jest.fn();
 jest.mock('next/navigation', () => ({
-  useRouter: () => ({ refresh: jest.fn() }),
+  useRouter: () => ({ refresh: refreshMock }),
 }));
 
+const createActionMock = jest.fn();
 jest.mock('@/app/actions/prompt.actions', () => ({
-  createPromptAction: jest.fn(),
+  createPromptAction: (...args: unknown[]) => createActionMock(...args),
 }));
 
 jest.mock('sonner', () => ({
-  toast: {
-    success: jest.fn(),
-    error: jest.fn(),
-  },
+  toast: { success: jest.fn(), error: jest.fn() },
 }));
+
+const makeSut = () => {
+  return render(<PromptForm />);
+};
 
 describe('PromptForm', () => {
   const user = userEvent.setup();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    createActionMock.mockReset();
+    refreshMock.mockReset();
+    (toast.success as jest.Mock).mockReset();
+    (toast.error as jest.Mock).mockReset();
   });
 
-  it('deve exibir a mensagem correta ao criar um prompt com sucesso', async () => {
-    (createPromptAction as jest.Mock).mockResolvedValue({
+  it('deve criar um novo prompt com sucesso', async () => {
+    const successMessage = 'success';
+    createActionMock.mockResolvedValueOnce({
       success: true,
-      message: 'Prompt criado com sucesso',
+      message: successMessage,
     });
+    makeSut();
 
-    render(<PromptForm />);
-
-    await user.type(
-      screen.getByPlaceholderText('Title of the prompt'),
-      'Nova ideia'
+    const titleInput = screen.getByPlaceholderText('Title of the prompt');
+    await user.type(titleInput, 'title');
+    const contentInput = screen.getByPlaceholderText(
+      'Digite o conteúdo do prompt...'
     );
-    await user.type(
-      screen.getByPlaceholderText('Digite o conteúdo do prompt...'),
-      'Conteúdo do prompt'
-    );
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+    await user.type(contentInput, 'content');
 
-    await waitFor(() => {
-      expect(toast.success).toHaveBeenCalledWith('Prompt criado com sucesso');
+    const submitButton = screen.getByRole('button', { name: 'Save' });
+    await user.click(submitButton);
+
+    expect(createActionMock).toHaveBeenCalledWith({
+      title: 'title',
+      content: 'content',
     });
+    expect(toast.success).toHaveBeenCalledWith(successMessage);
+    expect(refreshMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('deve exibir um erro quando a action de criação falhar', async () => {
+    const errorMessage = 'error';
+    createActionMock.mockResolvedValueOnce({
+      success: false,
+      message: errorMessage,
+    });
+    makeSut();
+
+    const titleInput = screen.getByPlaceholderText('Title of the prompt');
+    await user.type(titleInput, 'title');
+    const contentInput = screen.getByPlaceholderText(
+      'Digite o conteúdo do prompt...'
+    );
+    await user.type(contentInput, 'content');
+
+    const submitButton = screen.getByRole('button', { name: 'Save' });
+    await user.click(submitButton);
+
+    expect(toast.error).toHaveBeenCalledWith(errorMessage);
+    expect(refreshMock).not.toHaveBeenCalled();
   });
 });
