@@ -7,7 +7,7 @@ export class CreatePromptUseCase {
   async execute(data: CreatePromptDTO): Promise<void> {
     const promptExists = await this.PromptRepository.findByTitle(data.title);
     if (promptExists) {
-      throw new Error('Prompt with this title already exists.');
+      throw new Error('PROMPT_ALREADY_EXISTS');
     }
 
     await this.PromptRepository.create(data);
