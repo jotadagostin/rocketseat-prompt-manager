@@ -37,7 +37,7 @@ describe('Server Actions: Prompts', () => {
       const result = await createPromptAction(data);
 
       expect(result?.success).toBe(true);
-      expect(result?.message).toBe('Prompt criado com sucesso');
+      expect(result?.message).toBe('Prompt created successfully.');
     });
 
     it('deve retornar erro de validação quando os campos forem vazios', async () => {
@@ -49,7 +49,7 @@ describe('Server Actions: Prompts', () => {
       const result = await createPromptAction(data);
 
       expect(result?.success).toBe(false);
-      expect(result?.message).toBe('Falha ao criar prompt.');
+      expect(result?.message).toBe('Failed to create prompt.');
       expect(result?.errors).toBeDefined();
     });
 
@@ -63,7 +63,7 @@ describe('Server Actions: Prompts', () => {
       const result = await createPromptAction(data);
 
       expect(result?.success).toBe(false);
-      expect(result?.message).toBe('Prompt com esse título já existe.');
+      expect(result?.message).toBe('A prompt with this title already exists.');
     });
 
     it('Deve retornar error generico quando a criacao falhar', async () => {
@@ -76,7 +76,7 @@ describe('Server Actions: Prompts', () => {
       const result = await createPromptAction(data);
 
       expect(result.success).toBe(false);
-      expect(result.message).toBe('Falha ao criar prompt.');
+      expect(result.message).toBe('Failed to create prompt.');
     });
   });
 
@@ -111,7 +111,7 @@ describe('Server Actions: Prompts', () => {
     });
 
     it('Deve retornar um erro generico quando falhar a busca', async () => {
-      const error = new Error('Falha ao buscar prompts.');
+      const error = new Error('Failed to search prompts.');
       mockedSearchExecute.mockRejectedValueOnce(error);
 
       const formData = new FormData();
@@ -121,7 +121,7 @@ describe('Server Actions: Prompts', () => {
 
       expect(result.success).toBe(false);
       expect(result.prompts).toBeUndefined();
-      expect(result.message).toBe('Falha ao buscar prompts.');
+      expect(result.message).toBe('Failed to search prompts.');
     });
 
     it('Deve aparar espacos do termo antes de executar', async () => {

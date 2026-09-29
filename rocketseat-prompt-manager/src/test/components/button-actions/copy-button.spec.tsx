@@ -28,7 +28,7 @@ describe('CopyButton', () => {
     const content = '    ';
     makeSut({ content });
 
-    const button = screen.getByRole('button', { name: /copiar/i });
+    const button = screen.getByRole('button', { name: /copy/i });
     expect(button).toBeDisabled();
     await user.click(button);
     expect(writeTextMock).not.toHaveBeenCalled();
@@ -39,12 +39,12 @@ describe('CopyButton', () => {
     const content = 'text';
     makeSut({ content });
 
-    const button = screen.getByRole('button', { name: /copiar/i });
+    const button = screen.getByRole('button', { name: /copy/i });
     await user.click(button);
 
     await waitFor(() =>
       expect(
-        screen.getByRole('button', { name: /copiado/i })
+        screen.getByRole('button', { name: /copied/i })
       ).toBeInTheDocument()
     );
 
@@ -53,9 +53,7 @@ describe('CopyButton', () => {
     });
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /copiar/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /copy/i })).toBeInTheDocument();
     });
   });
 
@@ -65,15 +63,15 @@ describe('CopyButton', () => {
     const content = 'text';
     makeSut({ content });
 
-    const button = screen.getByRole('button', { name: /copiar/i });
+    const button = screen.getByRole('button', { name: /copy/i });
     await user.click(button);
 
     await waitFor(() => {
       expect(
-        screen.getByRole('button', { name: /copiado/i })
+        screen.getByRole('button', { name: /copied/i })
       ).toBeInTheDocument();
     });
-    await user.click(screen.getByRole('button', { name: /copiado/i }));
+    await user.click(screen.getByRole('button', { name: /copied/i }));
 
     expect(clearSpy).toHaveBeenCalled();
     clearSpy.mockRestore();
@@ -88,14 +86,14 @@ describe('CopyButton', () => {
     const content = 'text';
     makeSut({ content });
 
-    const button = screen.getByRole('button', { name: /copiar/i });
+    const button = screen.getByRole('button', { name: /copy/i });
     await user.click(button);
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(
-        `Erro ao copiar o texto: ${errorMessage}`
+        `Failed to copy text: ${errorMessage}`
       );
     });
-    expect(screen.getByRole('button', { name: /copiar/i })).toBeVisible();
+    expect(screen.getByRole('button', { name: /copy/i })).toBeVisible();
   });
 });

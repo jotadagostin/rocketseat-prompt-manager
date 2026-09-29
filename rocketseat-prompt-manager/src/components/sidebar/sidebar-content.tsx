@@ -78,8 +78,8 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
       <Button
         className="md:hidden fixed top-6 left-6 z-50"
         variant="secondary"
-        title="Abrir menu"
-        aria-label="Abrir menu"
+        title="Open menu"
+        aria-label="Open menu"
         aria-expanded={isMobileOpen}
         onClick={openMobile}
       >
@@ -97,8 +97,8 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                 onClick={expandSidebar}
                 variant="icon"
                 className="md:inline-flex p-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-accent-500 rounded-lg transition-colors"
-                aria-label="Expandir sidebar"
-                title="Expandir sidebar"
+                aria-label="Expand sidebar"
+                title="Expand sidebar"
               >
                 <ArrowRightToLine className="w-5 h-5 text-gray-100" />
               </Button>
@@ -112,8 +112,8 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
             >
               <Button
                 onClick={handleNewPrompt}
-                aria-label="Novo prompt"
-                title="Novo prompt"
+                aria-label="New prompt"
+                title="New prompt"
               >
                 <AddIcon className="w-5 h-5 text-white" />
               </Button>
@@ -128,8 +128,8 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                 <div className="flex items-center justify-between">
                   <Button
                     variant="secondary"
-                    aria-label="Fechar menu"
-                    title="Fechar menu"
+                    aria-label="Close menu"
+                    title="Close menu"
                     onClick={closeMobile}
                   >
                     <CloseButton className="w-5 h-5 text-gray-100" />
@@ -148,8 +148,8 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                     onClick={collapsedSidebar}
                     variant="icon"
                     className="md:inline-flex p-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-accent-500 rounded-lg transition-colors"
-                    title="Minimizar sidebar"
-                    aria-label="Minimizar sidebar"
+                    title="Collapse sidebar"
+                    aria-label="Collapse sidebar"
                   >
                     <ArrowLeftToLine className="w-5 h-5 text-gray-100" />
                   </Button>
@@ -166,14 +166,14 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                     name="q"
                     type="text"
                     value={query}
-                    placeholder="Buscar prompts..."
+                    placeholder="Search prompts..."
                     onChange={handleQueryChange}
                     autoFocus
                   />
                   {isPending && (
                     <div
-                      title="Carregando prompts"
-                      aria-label="Carregando prompts"
+                      title="Loading prompts"
+                      aria-label="Loading prompts"
                       className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2 text-gray-300"
                     >
                       <Spinner />
@@ -190,14 +190,14 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
               >
                 <Button onClick={handleNewPrompt} className="w-full" size="lg">
                   <AddIcon className="w-5 h-5 mr-2" />
-                  Novo prompt
+                  New prompt
                 </Button>
               </motion.div>
             </section>
 
             <motion.nav
               className="flex-1 overflow-auto px-6 pb-6"
-              aria-label="Lista de prompts"
+              aria-label="Prompt list"
               initial={false}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

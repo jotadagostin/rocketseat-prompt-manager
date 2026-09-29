@@ -33,7 +33,7 @@ export const CopyButton = ({ content }: CopyButtonProps) => {
       timerRef.current = setTimeout(() => setIsCopied(false), 2000);
     } catch (error) {
       const _error = error as Error;
-      toast.error(`Erro ao copiar o texto: ${_error.message}`);
+      toast.error(`Failed to copy text: ${_error.message}`);
     }
   };
 
@@ -57,7 +57,7 @@ export const CopyButton = ({ content }: CopyButtonProps) => {
       ) : (
         <Copy className="w-4 h-4" />
       )}
-      <span>{isCopied ? 'Copiado' : 'copiar'}</span>
+      <span>{isCopied ? 'Copied' : 'Copy'}</span>
     </Button>
   );
 };

@@ -25,7 +25,7 @@ export async function createPromptAction(data: CreatePromptDTO) {
 
     return {
       success: false,
-      message: 'Falha ao criar prompt.',
+      message: 'Failed to create prompt.',
       errors: fieldErrors,
     };
   }
@@ -39,19 +39,19 @@ export async function createPromptAction(data: CreatePromptDTO) {
     if (_error.message === 'PROMPT_ALREADY_EXISTS') {
       return {
         success: false,
-        message: 'Prompt com esse título já existe.',
+        message: 'A prompt with this title already exists.',
       };
     }
 
     return {
       success: false,
-      message: 'Falha ao criar prompt.',
+      message: 'Failed to create prompt.',
     };
   }
 
   return {
     success: true,
-    message: 'Prompt criado com sucesso',
+    message: 'Prompt created successfully.',
   };
 }
 
@@ -79,7 +79,7 @@ export async function searchPromptAction(
   } catch {
     return {
       success: false,
-      message: 'Falha ao buscar prompts.',
+      message: 'Failed to search prompts.',
     };
   }
 }

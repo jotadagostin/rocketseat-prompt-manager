@@ -85,7 +85,7 @@ export const PromptForm = () => {
             <FormItem>
               <FormControl>
                 <Textarea
-                  placeholder="Digite o conteúdo do prompt..."
+                  placeholder="Enter your prompt content..."
                   variant="transparent"
                   size="lg"
                   {...field}

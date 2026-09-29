@@ -49,7 +49,7 @@ describe('SidebarContent', () => {
       makeSut();
 
       expect(screen.getByRole('complementary')).toBeVisible();
-      expect(screen.getByRole('button', { name: 'Novo prompt' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'New prompt' })).toBeVisible();
     });
 
     it('deveria renderizar a lista de prompts', () => {
@@ -74,7 +74,7 @@ describe('SidebarContent', () => {
     it('deveria atualizar o campo de busca ao digitar', async () => {
       const text = 'AI';
       makeSut();
-      const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+      const searchInput = screen.getByPlaceholderText('Search prompts...');
 
       await user.type(searchInput, text);
 
@@ -89,11 +89,11 @@ describe('SidebarContent', () => {
       const aside = screen.getByRole('complementary');
       expect(aside.className).toContain('-translate-x-full');
 
-      const openButton = screen.getByRole('button', { name: 'Abrir menu' });
+      const openButton = screen.getByRole('button', { name: 'Open menu' });
       await user.click(openButton);
       expect(aside.className).toContain('translate-x-0');
 
-      const closeButton = screen.getByRole('button', { name: 'Fechar menu' });
+      const closeButton = screen.getByRole('button', { name: 'Close menu' });
       await user.click(closeButton);
       expect(aside.className).toContain('-translate-x-full');
     });
@@ -107,12 +107,12 @@ describe('SidebarContent', () => {
       expect(aside).toBeVisible();
 
       const collapseButton = screen.getByRole('button', {
-        name: /minimizar sidebar/i,
+        name: /collapse sidebar/i,
       });
       expect(collapseButton).toBeVisible();
 
       const expandButton = screen.queryByRole('button', {
-        name: /expandir sidebar/i,
+        name: /expand sidebar/i,
       });
       expect(expandButton).not.toBeInTheDocument();
     });
@@ -120,33 +120,33 @@ describe('SidebarContent', () => {
     it('deveria reexpandir ao clicar no botão de expandir', async () => {
       makeSut();
       const collapseButton = screen.getByRole('button', {
-        name: /minimizar sidebar/i,
+        name: /collapse sidebar/i,
       });
       await user.click(collapseButton);
 
       const expandButton = screen.getByRole('button', {
-        name: /expandir sidebar/i,
+        name: /expand sidebar/i,
       });
       await user.click(expandButton);
 
       expect(
-        screen.getByRole('button', { name: /minimizar sidebar/i })
+        screen.getByRole('button', { name: /collapse sidebar/i })
       ).toBeVisible();
       expect(
-        screen.getByRole('navigation', { name: 'Lista de prompts' })
+        screen.getByRole('navigation', { name: 'Prompt list' })
       ).toBeVisible();
     });
 
     it('deveria contrair e mostrar o botão de expandir', async () => {
       makeSut();
       const collapseButton = screen.getByRole('button', {
-        name: /minimizar sidebar/i,
+        name: /collapse sidebar/i,
       });
 
       await user.click(collapseButton);
 
       const expandButton = screen.queryByRole('button', {
-        name: /expandir sidebar/i,
+        name: /expand sidebar/i,
       });
       expect(expandButton).toBeInTheDocument();
       expect(collapseButton).not.toBeInTheDocument();
@@ -155,13 +155,13 @@ describe('SidebarContent', () => {
     it('deveria exibir o botão de criar um novo prompt na sidebar minimizada', async () => {
       makeSut();
       const collapseButton = screen.getByRole('button', {
-        name: /minimizar sidebar/i,
+        name: /collapse sidebar/i,
       });
 
       await user.click(collapseButton);
 
       const newPromptButton = screen.getByRole('button', {
-        name: 'Novo prompt',
+        name: 'New prompt',
       });
       expect(newPromptButton).toBeVisible();
     });
@@ -169,13 +169,13 @@ describe('SidebarContent', () => {
     it('não deveria exibir a lista de prompts na sidebar minimizada', async () => {
       makeSut();
       const collapseButton = screen.getByRole('button', {
-        name: /minimizar sidebar/i,
+        name: /collapse sidebar/i,
       });
 
       await user.click(collapseButton);
 
       const nav = screen.queryByRole('navigation', {
-        name: 'Lista de prompts',
+        name: 'Prompt list',
       });
       expect(nav).not.toBeInTheDocument();
     });
@@ -184,7 +184,7 @@ describe('SidebarContent', () => {
   describe('Novo Prompt', () => {
     it('deveria navegar o usuário para a paga de novo prompt /new', async () => {
       makeSut();
-      const newButton = screen.getByRole('button', { name: 'Novo prompt' });
+      const newButton = screen.getByRole('button', { name: 'New prompt' });
 
       await user.click(newButton);
 
@@ -196,7 +196,7 @@ describe('SidebarContent', () => {
     it('deveria navegar com URL codificada ao digitar e limpar ', async () => {
       const text = 'A B';
       makeSut();
-      const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+      const searchInput = screen.getByPlaceholderText('Search prompts...');
 
       await user.type(searchInput, text);
 
@@ -215,7 +215,7 @@ describe('SidebarContent', () => {
         .mockImplementation(() => undefined);
       makeSut();
 
-      const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+      const searchInput = screen.getByPlaceholderText('Search prompts...');
 
       await user.type(searchInput, 'AI');
 
@@ -242,7 +242,7 @@ describe('SidebarContent', () => {
     const searchParams = new URLSearchParams(`q=${text}`);
     mockSearchParams = searchParams;
     makeSut();
-    const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+    const searchInput = screen.getByPlaceholderText('Search prompts...');
 
     await waitFor(() => expect(searchInput).toHaveValue(text));
   });
