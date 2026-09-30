@@ -20,8 +20,13 @@ import { createPromptAction } from '@/app/actions/prompt.actions';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { CopyButton } from '../button-actions';
+import { Prompt } from '@/core/domain/prompts/prompt.entity';
 
-export const PromptForm = () => {
+type PromptFormProps = {
+  prompt?: Prompt | null;
+};
+
+export const PromptForm = ({ prompt }: PromptFormProps) => {
   const router = useRouter();
 
   const form = useForm<CreatePromptDTO>({

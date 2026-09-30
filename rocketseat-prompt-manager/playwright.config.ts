@@ -29,7 +29,7 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
 
     /**
-     * Tempo de espera para o servidor iniciar (em milissegundos).
+     * Time to wait for the server to start (in milliseconds).
      */
     timeout: 180 * 1000,
     env: {
