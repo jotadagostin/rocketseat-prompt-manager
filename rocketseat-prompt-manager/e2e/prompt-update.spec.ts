@@ -27,13 +27,11 @@ test('Prompt edition by UI (sucess)', async ({ page }) => {
   await page.fill('textarea[name="content"]', updatedContent);
   await page.getByRole('button', { name: 'Save' }).click();
 
-  await page.waitForSelector('text=Prompt updated with sucess', {
+  await page.waitForSelector('text=Prompt updated with success', {
     state: 'visible',
     timeout: 15000,
   });
 
-  await expect(
-    page.getByRole('heading', { name: updatedContent })
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: updatedTitle })).toBeVisible();
   await expect(page.locator('input[name="title"]')).toHaveValue(updatedTitle);
 });

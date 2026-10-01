@@ -10,6 +10,11 @@ import {
 } from '@/core/aplication/prompts/create-prompt.dto';
 import z from 'zod';
 import { CreatePromptUseCase } from '@/core/aplication/prompts/create-prompt.use-case';
+import {
+  UpdatePromptDTO,
+  updatePromptDtoSchema,
+} from '@/core/aplication/prompts/update-prompt.dto';
+import { UpdatePromptUseCase } from '@/core/aplication/prompts/update-prompt.use-case';
 
 type SearchFormState = {
   success: boolean;
@@ -17,7 +22,16 @@ type SearchFormState = {
   message?: string;
 };
 
-export async function createPromptAction(data: CreatePromptDTO) {
+type FormState = {
+  success: boolean;
+  message: string;
+  prompt?: PromptSummary;
+  errors?: unknown;
+};
+
+export async function createPromptAction(
+  data: CreatePromptDTO
+): Promise<FormState> {
   const validated = createPromptSchema.safeParse(data);
 
   if (!validated.success) {
@@ -53,6 +67,43 @@ export async function createPromptAction(data: CreatePromptDTO) {
     success: true,
     message: 'Prompt created successfully.',
   };
+}
+
+export async function updatePromptAction(
+  data: UpdatePromptDTO
+): Promise<FormState> {
+  const validated = updatePromptDtoSchema.safeParse(data);
+
+  if (!validated.success) {
+    const { fieldErrors } = z.flattenError(validated.error);
+
+    return {
+      success: false,
+      message: 'Failed to update prompt.',
+      errors: fieldErrors,
+    };
+  }
+
+  try {
+    const repository = new PrismaPromptRepository(prisma);
+    const useCase = new UpdatePromptUseCase(repository);
+    await useCase.execute(validated.data);
+
+    return { success: true, message: 'Prompt updated with success' };
+  } catch (error) {
+    const _error = error as Error;
+    if (_error.message === 'PROMPT_NOT_FOUND') {
+      return {
+        success: false,
+        message: 'Prompt not found.',
+      };
+    }
+
+    return {
+      success: false,
+      message: 'Failed to update prompt.',
+    };
+  }
 }
 
 export async function searchPromptAction(
