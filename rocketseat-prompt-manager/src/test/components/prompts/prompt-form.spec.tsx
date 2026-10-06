@@ -1,4 +1,4 @@
-import { PromptForm } from '@/components/prompts';
+import { PromptForm, PromptFormProps } from '@/components/prompts';
 import { render, screen } from '@/lib/test-utils';
 import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
@@ -9,16 +9,18 @@ jest.mock('next/navigation', () => ({
 }));
 
 const createActionMock = jest.fn();
+const updateActionMock = jest.fn();
 jest.mock('@/app/actions/prompt.actions', () => ({
   createPromptAction: (...args: unknown[]) => createActionMock(...args),
+  updatePromptAction: (...args: unknown[]) => updateActionMock(...args),
 }));
 
 jest.mock('sonner', () => ({
   toast: { success: jest.fn(), error: jest.fn() },
 }));
 
-const makeSut = () => {
-  return render(<PromptForm />);
+const makeSut = ({ prompt }: PromptFormProps = {} as PromptFormProps) => {
+  return render(<PromptForm prompt={prompt} />);
 };
 
 describe('PromptForm', () => {
@@ -88,5 +90,39 @@ describe('PromptForm', () => {
     expect(screen.getByText('Title is required')).toBeVisible();
     expect(screen.getByText('Content is required')).toBeVisible();
     expect(createActionMock).not.toHaveBeenCalled();
+  });
+
+  it('Deve atualizar um prompt existente com sucesso', async () => {
+    updateActionMock.mockReturnValueOnce({
+      success: true,
+      message: 'Prompt updated with success',
+    });
+    const now = new Date();
+    const prompt = {
+      id: '1',
+      title: 'Original Title',
+      content: 'Original Content',
+      createdAt: now,
+      updatedAt: now,
+    };
+    makeSut({ prompt });
+    const titleInput = screen.getByPlaceholderText('Title of the prompt');
+    await user.clear(titleInput);
+    await user.type(titleInput, 'New Title');
+    const contentInput = screen.getByPlaceholderText(
+      'Enter your prompt content...'
+    );
+    await user.clear(contentInput);
+    await user.type(contentInput, 'New Content');
+    const submitButton = screen.getByRole('button', { name: 'Save' });
+    await user.click(submitButton);
+
+    expect(updateActionMock).toHaveBeenCalledWith({
+      id: prompt.id,
+      title: 'New Title',
+      content: 'New Content',
+    });
+    expect(toast.success).toHaveBeenCalledWith('Prompt updated with success');
+    expect(refreshMock).toHaveBeenCalledTimes(1);
   });
 });
