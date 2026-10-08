@@ -16,6 +16,7 @@ import {
   AlertDialogTrigger,
 } from '../ui/alert-dialog';
 import { toast } from 'sonner';
+import { deletePromptAction } from '@/app/actions/prompt.actions';
 
 export type PromptCardProps = {
   prompt: PromptSummary;
@@ -25,8 +26,21 @@ export const PromptCard = ({ prompt }: PromptCardProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
-    // setIsDeleting(true);
-    toast.success('Prompt removed successfully');
+    setIsDeleting(true);
+
+    try {
+      const result = await deletePromptAction(prompt.id);
+      if (!result.success) {
+        toast.error(result.message);
+      }
+
+      toast.success(result.message);
+    } catch (error) {
+      const _error = error as Error;
+      toast.error(_error.message);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (

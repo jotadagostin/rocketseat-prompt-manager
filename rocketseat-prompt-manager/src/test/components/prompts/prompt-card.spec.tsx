@@ -6,6 +6,11 @@ import { render, screen } from '@/lib/test-utils';
 import { userEvent } from '@testing-library/user-event/dist/cjs/setup/index.js';
 import { toast } from 'sonner';
 
+const deleteMOck = jest.fn();
+jest.mock('@/app/actions/prompt.actions', () => ({
+  deletePromptAction: (id: string) => deleteMOck(id),
+}));
+
 jest.mock('sonner', () => ({
   toast: { success: jest.fn(), error: jest.fn() },
 }));
@@ -38,6 +43,10 @@ describe('PromptCard', () => {
   });
 
   it('Deveria remover com sucesso e exibir o toast', async () => {
+    deleteMOck.mockResolvedValue({
+      success: true,
+      message: 'Prompt removed successfully',
+    });
     makeSut({ prompt });
 
     const deleteButton = screen.getByRole('button', {

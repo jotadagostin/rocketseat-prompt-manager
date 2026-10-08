@@ -106,6 +106,38 @@ export async function updatePromptAction(
   }
 }
 
+export async function deletePromptAction(id: string): Promise<FormState> {
+  if (!id) {
+    return {
+      success: false,
+      message: 'Prompt ID is required.',
+    };
+  }
+  try {
+    const repository = new PrismaPromptRepository(prisma);
+    const useCase = new DeletePromptUseCase(repository);
+    await useCase.execute(id);
+
+    return {
+      success: true,
+      message: 'Prompt deleted successfully.',
+    };
+  } catch (error) {
+    const _error = error as Error;
+    if (_error.message === 'PROMPT_NOT_FOUND') {
+      return {
+        success: false,
+        message: 'Prompt not found.',
+      };
+    }
+
+    return {
+      success: false,
+      message: 'Failed to delete prompt.',
+    };
+  }
+}
+
 export async function searchPromptAction(
   _prev: SearchFormState,
   formData: FormData
