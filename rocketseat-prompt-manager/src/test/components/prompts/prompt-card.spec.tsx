@@ -57,4 +57,21 @@ describe('PromptCard', () => {
 
     expect(toast.success).toHaveBeenCalledWith('Prompt removed successfully');
   });
+
+  it('Deveria exibir o erro quando a action falhar', async () => {
+    const errorMessage = 'Failed to remove prompt';
+    deleteMOck.mockResolvedValue({
+      success: false,
+      message: errorMessage,
+    });
+    makeSut({ prompt });
+
+    const deleteButton = screen.getByRole('button', {
+      name: 'Remove Prompt',
+    });
+    await user.click(deleteButton);
+    await user.click(screen.getByRole('button', { name: 'Confirm' }));
+
+    expect(toast.error).toHaveBeenCalledWith(errorMessage);
+  });
 });
