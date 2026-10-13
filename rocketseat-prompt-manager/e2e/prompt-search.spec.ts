@@ -24,7 +24,7 @@ test.describe('Busca de prompts na Sidebar', () => {
 
     await page.goto('/');
 
-    const searchInput = page.getByPlaceholder('Buscar prompts...');
+    const searchInput = page.getByPlaceholder('Search prompts...');
     await expect(searchInput).toBeVisible();
 
     await searchInput.fill(uniqueAlpha);
