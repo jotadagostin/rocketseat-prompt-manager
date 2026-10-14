@@ -73,8 +73,8 @@ describe('Server Actions: Prompts', () => {
     it('deve retornar erro quando o prompt já existir', async () => {
       mockedCreateExecute.mockRejectedValue(new Error('PROMPT_ALREADY_EXISTS'));
       const data = {
-        title: 'duplicado',
-        content: 'duplicado',
+        title: 'duplicate',
+        content: 'duplicate',
       };
 
       const result = await createPromptAction(data);

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '../ui/button';
 import { Check, Copy } from 'lucide-react';
 import { toast } from 'sonner';
+import { motion } from 'motion/react';
 
 export type CopyButtonProps = {
   content: string;
@@ -57,7 +58,15 @@ export const CopyButton = ({ content }: CopyButtonProps) => {
       ) : (
         <Copy className="w-4 h-4" />
       )}
-      <span>{isCopied ? 'Copied' : 'Copy'}</span>
+      <motion.span
+        key={isCopied ? 'Copied' : 'Copy'}
+        initial={{ opacity: 0, y: 2 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -2 }}
+        transition={{ duration: 0.2 }}
+      >
+        {isCopied ? 'Copied' : 'Copy'}
+      </motion.span>
     </Button>
   );
 };

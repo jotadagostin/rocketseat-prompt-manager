@@ -6,6 +6,11 @@ import { render, screen } from '@/lib/test-utils';
 import { userEvent } from '@testing-library/user-event/dist/cjs/setup/index.js';
 import { toast } from 'sonner';
 
+const refreshMock = jest.fn();
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ refresh: refreshMock }),
+}));
+
 const deleteMOck = jest.fn();
 jest.mock('@/app/actions/prompt.actions', () => ({
   deletePromptAction: (id: string) => deleteMOck(id),
