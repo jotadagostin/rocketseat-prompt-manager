@@ -19,7 +19,7 @@ describe('SearchPromptsUseCase', () => {
       updatedAt: new Date(),
     },
   ];
-  const repository: PromptRepository = {
+  const repository = {
     create: async () => undefined,
     findMany: async () => input,
     findByTitle: async () => null,
@@ -29,7 +29,7 @@ describe('SearchPromptsUseCase', () => {
           prompt.title.toLowerCase().includes(term.toLowerCase()) ||
           prompt.content.toLowerCase().includes(term.toLowerCase())
       ),
-  };
+  } as unknown as PromptRepository;
 
   it('deve retornar sucesso com o termo de busca for vazio', async () => {
     const useCase = new SearchPromptsUseCase(repository);

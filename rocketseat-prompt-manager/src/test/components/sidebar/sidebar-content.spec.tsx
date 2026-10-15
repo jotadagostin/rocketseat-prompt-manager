@@ -11,7 +11,6 @@ const setQueryMock = jest.fn();
 let mockSearchParams = new URLSearchParams();
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: pushMock }),
-  useSearchParams: () => new URLSearchParams(),
 }));
 
 jest.mock('nuqs', () => ({

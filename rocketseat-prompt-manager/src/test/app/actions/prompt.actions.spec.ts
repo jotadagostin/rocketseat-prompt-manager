@@ -4,8 +4,13 @@ import {
   searchPromptAction,
   updatePromptAction,
 } from '@/app/actions/prompt.actions';
+import { revalidatePath } from 'next/cache';
 
 jest.mock('@/lib/prisma', () => ({ prisma: {} }));
+
+jest.mock('next/cache', () => ({
+  revalidatePath: jest.fn(),
+}));
 
 const mockedSearchExecute = jest.fn();
 const mockedCreateExecute = jest.fn();
@@ -41,6 +46,7 @@ describe('Server Actions: Prompts', () => {
     mockedCreateExecute.mockReset();
     mockedUpdateExecute.mockReset();
     mockedDeleteExecute.mockReset();
+    (revalidatePath as jest.Mock).mockReset();
   });
 
   describe('createPromptAction', () => {
@@ -55,6 +61,7 @@ describe('Server Actions: Prompts', () => {
 
       expect(result?.success).toBe(true);
       expect(result?.message).toBe('Prompt created successfully.');
+      expect(revalidatePath).toHaveBeenCalledTimes(1);
     });
 
     it('deve retornar erro de validação quando os campos forem vazios', async () => {
@@ -112,6 +119,7 @@ describe('Server Actions: Prompts', () => {
         success: true,
         message: 'Prompt updated with success',
       });
+      expect(revalidatePath).toHaveBeenCalledTimes(1);
     });
 
     it('Deve retornar erro de validacao quando os campos faltarem', async () => {
@@ -156,7 +164,7 @@ describe('Server Actions: Prompts', () => {
     });
   });
 
-  describe.only('deletePromptAction', () => {
+  describe('deletePromptAction', () => {
     it('Deve remover com sucesso', async () => {
       mockedDeleteExecute.mockResolvedValue(undefined);
       const promptId = '1';
@@ -164,6 +172,7 @@ describe('Server Actions: Prompts', () => {
 
       expect(result.success).toBe(true);
       expect(result.message).toBe('Prompt deleted successfully.');
+      expect(revalidatePath).toHaveBeenCalledTimes(1);
     });
     it('Deve retornar erro quando o id for vazio', async () => {
       const promptId = '';

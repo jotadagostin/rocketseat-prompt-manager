@@ -56,13 +56,11 @@ function createMockPrisma() {
 
 describe('PrismaPromptRepository', () => {
   let prisma: ReturnType<typeof createMockPrisma>;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let repository: PrismaPromptRepository;
 
   beforeEach(() => {
     prisma = createMockPrisma();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    repository = new PrismaPromptRepository(prisma as any);
+    repository = new PrismaPromptRepository(prisma);
   });
 
   describe('create', () => {

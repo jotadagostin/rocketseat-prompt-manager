@@ -13,4 +13,8 @@ jest.mock('next/navigation', () => ({
   useRouter: () => ({ refresh: jest.fn() }),
 }));
 
+jest.mock('next/cache', () => ({
+  relavidatePath: jest.fn(),
+}));
+
 expect.extend({});
